@@ -1,33 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-
+import { useState} from 'react'
 function App() {
-  const [count, setCount] = useState(0)
 
+
+  const [task, setTask] = useState([])
+  const [newTask, setNewTask] = useState('')
+  const handleAddTask = () => {
+    if (newTask.trim() === '') return;
+    setTask(prev => [...prev, newTask])
+    setNewTask('')
+    console.log(task);
+  }
+const handleDeleteTask = (indexToDelete) => {
+  setTask(prev => prev.filter((_, index) => index !== indexToDelete))
+}
+
+  
+ 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+     <h1>My To-Do</h1>
+     <input type="text"
+     placeholder='nueva tarea'
+     value={newTask}
+     onChange={(e) => setNewTask(e.target.value)}
+      />
+
+      <button onClick={handleAddTask} disabled={task.length >= 10}>{task.length >= 10 ? "Límite alcanzado" : "Agregar tarea"}</button>
+
+      <ul >
+        {task.length === 0 && <p>No hay tareas pendientes</p>}
+        {task.length >= 10 && <p>¡Tienes muchas tareas!</p>}
+        {task.map((tarea, index)=>(
+
+          <li key={index}>{tarea} <button onClick={() => handleDeleteTask(index)}>x</button></li>
+        ))}
+      </ul>
+
+
     </>
   )
 }
